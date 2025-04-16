@@ -1,0 +1,9 @@
+langgraph
+langchain
+langchain-ollama
+langchain-chroma
+langchain-community
+pdfplumber
+tqdm
+httpx
+pymupdf
