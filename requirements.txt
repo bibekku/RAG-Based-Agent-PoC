@@ -2,7 +2,7 @@ langgraph
 langchain
 langchain-ollama
 langchain-openai
-langchain-chroma
+faiss-cpu
 langchain-community
 pdfplumber
 tqdm
