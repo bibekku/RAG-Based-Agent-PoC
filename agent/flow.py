@@ -8,6 +8,9 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from agent.tool_config import TOOLS
 
+import time
+from pathlib import Path
+
 
 class AgentState(TypedDict):
     input_text: str
@@ -45,3 +48,32 @@ def build_flow_graph():
     g.add_edge("route_tool", END)
 
     return g.compile()
+
+
+INBOX_DIR = Path("inbox")
+OUTBOX_DIR = Path("outbox")
+
+
+def run_inbox_loop():
+    app = build_flow_graph()
+    print("[Agent] Monitoring inbox...")
+
+    while True:
+        txt_files = sorted(INBOX_DIR.glob("*.txt"))
+        if not txt_files:
+            time.sleep(1)
+            continue
+
+        input_file = txt_files[0]
+        print(f"[Agent] Processing: {input_file.name}")
+
+        input_text = input_file.read_text()
+        result = app.invoke({"input_text": input_text})
+
+        output_file = OUTBOX_DIR / input_file.name
+        output_file.write_text(result["response"])
+
+        input_file.unlink()  # optionally delete inbox file
+        print(f"[Agent] Wrote response to {output_file}")
+
+        time.sleep(0.5)

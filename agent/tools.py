@@ -23,7 +23,7 @@ def _load_vectorstore(pdf_path: Path, db_path: Path) -> Chroma:
     loader = PyMuPDFLoader(str(pdf_path))
     docs = loader.load()
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=350, chunk_overlap=50)
     chunks = splitter.split_documents(docs)
 
     store = Chroma.from_documents(
@@ -31,7 +31,6 @@ def _load_vectorstore(pdf_path: Path, db_path: Path) -> Chroma:
         embedding=embedder,
         persist_directory=str(db_path)
     )
-    store.persist()
     return store
 
 
