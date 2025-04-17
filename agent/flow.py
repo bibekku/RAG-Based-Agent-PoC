@@ -23,7 +23,7 @@ llm = ChatOllama(model="mistral", base_url="http://192.168.1.158:11434")
 
 # 2. Tool selection prompt
 prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant for NebulaForge. You have access to tools for answering questions about either the company Code of Conduct or Tax Guidelines."),
+    ("system", "You are a helpful assistant for NebulaForge. You have access to tools that return source material (context) to help you answer user questions. Use the tool output to construct your response. Then add a section titled 'Sources' with short excerpts from the context."),
     ("user", "{input}"),
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])

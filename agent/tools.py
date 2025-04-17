@@ -38,17 +38,25 @@ _coc_store = None
 _tax_store = None
 
 
-def fetch_from_coc(question: str, k: int = 4) -> str:
+def fetch_from_coc(question: str, k: int = 3) -> str:
     global _coc_store
     if _coc_store is None:
         _coc_store = _load_vectorstore(COC_PDF, COC_DB_DIR)
     results = _coc_store.similarity_search(question, k=k)
-    return "\n\n".join([r.page_content for r in results])
+    chunks = [r.page_content for r in results]
+    return {
+        "context": "\n\n".join(chunks),
+        "citations": chunks
+    }
 
 
-def fetch_from_tax(question: str, k: int = 4) -> str:
+def fetch_from_tax(question: str, k: int = 3) -> str:
     global _tax_store
     if _tax_store is None:
         _tax_store = _load_vectorstore(TAX_PDF, TAX_DB_DIR)
     results = _tax_store.similarity_search(question, k=k)
-    return "\n\n".join([r.page_content for r in results])
+    chunks = [r.page_content for r in results]
+    return {
+        "context": "\n\n".join(chunks),
+        "citations": chunks
+    }
