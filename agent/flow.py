@@ -7,6 +7,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from agent.tool_config import TOOLS
+from agent.llm_config import get_llm
 
 import time
 from pathlib import Path
@@ -19,7 +20,7 @@ class AgentState(TypedDict):
 
 
 # 1. LangChain LLM setup
-llm = ChatOllama(model="mistral", base_url="http://192.168.1.158:11434")
+llm = get_llm()
 
 # 2. Tool selection prompt
 prompt = ChatPromptTemplate.from_messages([

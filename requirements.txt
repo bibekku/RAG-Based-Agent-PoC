@@ -1,9 +1,11 @@
 langgraph
 langchain
 langchain-ollama
+langchain-openai
 langchain-chroma
 langchain-community
 pdfplumber
 tqdm
 httpx
 pymupdf
+python-dotenv
