@@ -1,1 +1,1 @@
-What if I wanted to use an LLM in my code? Is that allowed?
+What is the company's policy on my tax document 1099?

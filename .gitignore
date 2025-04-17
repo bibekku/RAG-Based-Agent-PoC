@@ -1,7 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
-data/tax_chroma/
-data/coc_chroma/
+data/tax_faiss/
+data/coc_faiss/
 inbox/*.txt
 outbox/*.txt

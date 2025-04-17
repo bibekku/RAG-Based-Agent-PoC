@@ -16,16 +16,19 @@ embedder = OllamaEmbeddings(model="mistral", base_url="http://192.168.1.158:1143
 
 # Function to load or create a FAISS vector store
 def _load_vectorstore(pdf_path: Path, db_path: Path) -> FAISS:
+    print("[Agent] Reading from FAISS local")
     if db_path.exists():
         return FAISS.load_local(str(db_path), embedder, allow_dangerous_deserialization=True)
 
     loader = PyMuPDFLoader(str(pdf_path))
     docs = loader.load()
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=350, chunk_overlap=75)
     chunks = splitter.split_documents(docs)
 
     store = FAISS.from_documents(chunks, embedder)
+
+    db_path.mkdir(parents=True, exist_ok=True)
     store.save_local(str(db_path))
     return store
 
@@ -39,7 +42,11 @@ def fetch_from_coc(question: str, k: int = 4) -> str:
     if _coc_store is None:
         _coc_store = _load_vectorstore(COC_PDF, COC_DB_DIR)
     results = _coc_store.similarity_search(question, k=k)
-    return "\n\n".join([r.page_content for r in results])
+    chunks = [r.page_content for r in results]
+    return {
+        "context": "\n\n".join(chunks),
+        "citations": chunks
+    }
 
 # Function to fetch from Tax Guidelines vector store
 def fetch_from_tax(question: str, k: int = 4) -> str:
@@ -47,4 +54,8 @@ def fetch_from_tax(question: str, k: int = 4) -> str:
     if _tax_store is None:
         _tax_store = _load_vectorstore(TAX_PDF, TAX_DB_DIR)
     results = _tax_store.similarity_search(question, k=k)
-    return "\n\n".join([r.page_content for r in results])
+    chunks = [r.page_content for r in results]
+    return {
+        "context": "\n\n".join(chunks),
+        "citations": chunks
+    }

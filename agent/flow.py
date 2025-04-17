@@ -24,7 +24,10 @@ llm = get_llm()
 
 # 2. Tool selection prompt
 prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a helpful assistant for NebulaForge. You have access to tools that return source material (context) to help you answer user questions. Use the tool output to construct your response. Then add a section titled 'Sources' with short excerpts from the context."),
+    ("system", 
+     "You are a helpful assistant for NebulaForge. You must use the available tools to answer every question. "
+     "Do not attempt to answer using your own knowledge. Choose the most appropriate tool, call it, and summarize the results."
+     "Then add a section titled 'Sources' with short excerpts from the context."),
     ("user", "{input}"),
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])
